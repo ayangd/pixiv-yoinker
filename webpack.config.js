@@ -24,6 +24,8 @@ const commonConfig = {
       _public: srcPaths('public'),
       _renderer: srcPaths('src/renderer'),
       _utils: srcPaths('src/utils'),
+      _preload: srcPaths('src/preload'),
+      _types: srcPaths('src/types'),
     },
     extensions: ['.js', '.json', '.ts', '.tsx'],
   },
@@ -88,4 +90,14 @@ rendererConfig.plugins = [
   }),
 ];
 
-module.exports = [mainConfig, rendererConfig];
+const preloadConfig = lodash.cloneDeep(commonConfig);
+preloadConfig.entry = './src/preload/preload.ts';
+preloadConfig.target = 'electron-preload';
+preloadConfig.output.filename = 'preload.bundle.js';
+preloadConfig.plugins = [
+  new HtmlWebpackPlugin({
+    template: path.resolve(__dirname, './public/index.html'),
+  }),
+];
+
+module.exports = [mainConfig, rendererConfig, preloadConfig];

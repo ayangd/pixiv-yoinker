@@ -1,7 +1,7 @@
 {
-  "name": "electron-react-typescript-webpack-boilerplate",
-  "version": "3.0.0",
-  "description": "Pre-configured boilerplate for Electron + React + TypeScript",
+  "name": "pixiv-yoinker",
+  "version": "1.0.0",
+  "description": "Yoinks pixiv images upon loading a page.",
   "main": "./dist/main.bundle.js",
   "scripts": {
     "start": "electron ./dist/main.bundle.js",
@@ -12,8 +12,8 @@
     "build:mac": "electron-builder build --mac --x64"
   },
   "build": {
-    "appId": "com.devtography.electron_boilerplate",
-    "productName": "Electron+React+TypeScript Boilerplate",
+    "appId": "com.ayangd.pixiv_yoinker",
+    "productName": "Pixiv Yoinker",
     "directories": {
       "app": "./dist/",
       "output": "./out/"
@@ -31,11 +31,12 @@
     },
     "buildVersion": "1"
   },
-  "author": "Wing Chau @Devtography",
+  "author": "Michael Dlone",
   "license": "MIT",
   "dependencies": {
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-jss": "^10.8.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0"
   },
@@ -50,7 +51,7 @@
     "copy-webpack-plugin": "^7.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^5.0.1",
-    "electron": "^11.1.1",
+    "electron": "^15.0.0",
     "electron-builder": "^22.9.1",
     "eslint": "^7.16.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -79,14 +80,13 @@
     "url": "git+https://github.com/Devtography/electron-react-typescript-webpack-boilerplate"
   },
   "keywords": [
-    "boilerplate",
     "Electron",
     "React",
     "Typescript",
-    "Webpack"
+    "Webpack",
+    "Pixiv"
   ],
   "bugs": {
     "url": "https://github.com/Devtography/electron-react-typescript-webpack-boilerplate/issues"
-  },
-  "homepage": "https://github.com/Devtography/electron-react-typescript-webpack-boilerplate#readme"
+  }
 }

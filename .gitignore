@@ -28,3 +28,7 @@ Thumbs.db
 # OS X files
 .DS_Store
 ._*
+
+# Data
+data/
+images/

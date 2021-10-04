@@ -1,23 +1,25 @@
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react",
-    "baseUrl": ".",
-    "paths": {
-      "_/*": ["src/*"],
-      "_public/*": ["public/*"],
-      "_main/*": ["src/main/*"],
-      "_models/*": ["src/models/*"],
-      "_renderer/*": ["src/renderer/*"],
-      "_utils/*": ["src/utils/*"]
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react",
+        "baseUrl": ".",
+        "paths": {
+            "_/*": ["src/*"],
+            "_public/*": ["public/*"],
+            "_main/*": ["src/main/*"],
+            "_models/*": ["src/models/*"],
+            "_renderer/*": ["src/renderer/*"],
+            "_utils/*": ["src/utils/*"],
+            "_preload/*": ["src/types/*"],
+            "_types/*": ["src/types/*"]
+        },
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "sourceMap": true,
+        "target": "esnext"
     },
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictNullChecks": true,
-    "sourceMap": true,
-    "target": "esnext"
-  },
-  "exclude": ["node_modules"]
+    "exclude": ["node_modules"]
 }
