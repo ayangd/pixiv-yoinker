@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Image from './image';
 import { createUseStyles } from 'react-jss';
 import { Illust, User } from '_/types/illust';
 
@@ -73,7 +72,7 @@ function ThumbPreview({ illust, onClick }: ThumbPreview) {
         <></>
     ) : (
         <div className={classes.thumbPreview}>
-            <Image
+            <img
                 className={`${classes.thumb} ${classes.images}`}
                 src={thumbnailImage}
                 onClick={onClick}
@@ -88,7 +87,7 @@ function ThumbPreview({ illust, onClick }: ThumbPreview) {
                     className={classes.user}
                     href={`https://www.pixiv.net/en/users/${user.id}`}
                 >
-                    <Image
+                    <img
                         className={`${classes.images} ${classes.userImage}`}
                         src={userImage}
                     />

@@ -3,7 +3,6 @@ import { createUseStyles } from 'react-jss';
 import { Illust } from '_/types/illust';
 import { Illustration } from '_/types/illustration';
 import { parseBreaks } from '../utils';
-import Image from './image';
 
 const useStyles = createUseStyles({
     illustration: ({ hidden }: { hidden: boolean }) => ({
@@ -133,7 +132,7 @@ function Illustration({ illust, hidden, onBack }: IllustrationProps) {
             </div>
             <div className={classes.imageContainer}>
                 {masterImages.map((masterImage) => (
-                    <Image className={classes.image} src={masterImage} />
+                    <img className={classes.image} src={masterImage} />
                 ))}
             </div>
         </div>

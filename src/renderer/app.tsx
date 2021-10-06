@@ -2,7 +2,6 @@ import * as React from 'react';
 import { createUseStyles } from 'react-jss';
 import { Illust } from '_/types/illust';
 import Illustration from './components/illustration';
-// import { Illustration as IllustrationInterface } from '_types/illustration';
 import Navigation from './components/navigation';
 import Thumbs from './components/thumbs';
 

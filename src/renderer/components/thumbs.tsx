@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
 import { Illust } from '_/types/illust';
-import { Illustration } from '_/types/illustration';
 import ThumbPreview from './thumb-preview';
 
 const useStyles = createUseStyles({
