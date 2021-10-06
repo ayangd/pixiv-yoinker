@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
+import { Illust } from '_/types/illust';
 import { Illustration } from '_/types/illustration';
 import ThumbPreview from './thumb-preview';
 
@@ -12,7 +13,7 @@ const useStyles = createUseStyles({
 });
 
 export interface ThumbsProps {
-    illusts: Illustration[];
+    illusts: Illust[];
     onClick?: (illustId: string) => void;
     hidden?: boolean;
 }
@@ -22,27 +23,13 @@ function Thumbs({ illusts, onClick, hidden }: ThumbsProps) {
 
     return (
         <div className={classes.thumbs}>
-            {illusts.map((post) => {
-                const illust = Object.values(post.illust)[0];
-                const user = Object.values(post.user)[0];
-                const userImageSplit = (user.image as string).split('/');
-                const userImage = userImageSplit[userImageSplit.length - 1];
-
+            {illusts.map((illust) => {
                 const illustOnClick =
                     onClick !== undefined
                         ? () => onClick(illust.id)
                         : undefined;
 
-                return (
-                    <ThumbPreview
-                        illustId={illust.id}
-                        illustTitle={illust.title}
-                        userId={user.userId}
-                        username={user.name}
-                        userImage={userImage}
-                        onClick={illustOnClick}
-                    />
-                );
+                return <ThumbPreview illust={illust} onClick={illustOnClick} />;
             })}
         </div>
     );

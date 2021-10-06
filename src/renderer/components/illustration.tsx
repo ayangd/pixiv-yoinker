@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
+import { Illust } from '_/types/illust';
 import { Illustration } from '_/types/illustration';
 import { parseBreaks } from '../utils';
 import Image from './image';
@@ -67,27 +68,30 @@ const useStyles = createUseStyles({
 });
 
 export interface IllustrationProps {
-    illustData?: Illustration;
+    illust?: Illust;
     hidden?: boolean;
     onBack?: () => void;
 }
 
-function Illustration({ illustData, hidden, onBack }: IllustrationProps) {
-    if (illustData === undefined) {
+function Illustration({ illust, hidden, onBack }: IllustrationProps) {
+    if (illust === undefined) {
         return <></>;
     }
     const classes = useStyles({ hidden: hidden ?? false });
-    const illust = Object.values(illustData.illust)[0];
-    const user = Object.values(illustData.user)[0];
     const [masterImages, setMasterImages] = React.useState<string[]>([]);
 
     React.useEffect(() => {
         let mounted = true;
 
         (async () => {
-            const result = await window.pixiv.getMasterList(illust.id);
+            let masterImages_: string[] = [];
+            for (let i = 0; i < illust.pageCount; i++) {
+                masterImages_.push(
+                    await window.pixiv.getMasterImage(illust.id, i),
+                );
+            }
             if (mounted) {
-                setMasterImages(result);
+                setMasterImages(masterImages_);
             }
         })();
 
@@ -115,7 +119,7 @@ function Illustration({ illustData, hidden, onBack }: IllustrationProps) {
                     }}
                 />
                 <div className={classes.tagContainer}>
-                    {illust.tags.tags.map((tag: any) => (
+                    {illust.tags.map((tag: any) => (
                         <span>
                             <span>#{tag.tag}</span>
                             <span>
@@ -128,8 +132,8 @@ function Illustration({ illustData, hidden, onBack }: IllustrationProps) {
                 </div>
             </div>
             <div className={classes.imageContainer}>
-                {masterImages.map((master) => (
-                    <Image className={classes.image} src={`master/${master}`} />
+                {masterImages.map((masterImage) => (
+                    <Image className={classes.image} src={masterImage} />
                 ))}
             </div>
         </div>

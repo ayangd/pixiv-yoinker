@@ -16,6 +16,7 @@ export interface Illustration {
             };
             width: number;
             height: number;
+            pageCount: number;
         }
     >;
     user: Record<

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Image from './image';
 import { createUseStyles } from 'react-jss';
+import { Illust, User } from '_/types/illust';
 
 const useStyles = createUseStyles({
     thumbPreview: {
@@ -34,46 +35,64 @@ const useStyles = createUseStyles({
 });
 
 export interface ThumbPreview {
-    illustId: string;
-    illustTitle: string;
-    userId: string;
-    username: string;
-    userImage: string;
+    illust: Illust;
     onClick?: React.MouseEventHandler<HTMLImageElement>;
 }
 
-function ThumbPreview({
-    illustId,
-    illustTitle,
-    userId,
-    username,
-    userImage,
-    onClick,
-}: ThumbPreview) {
+function ThumbPreview({ illust, onClick }: ThumbPreview) {
     const classes = useStyles({ thumbClickable: onClick !== undefined });
+    const [user, setUser] = React.useState<User>();
+    const [thumbnailImage, setThumbnailImage] = React.useState('');
+    const [userImage, setUserImage] = React.useState('');
 
-    return (
+    React.useEffect(() => {
+        let mounted = true;
+
+        (async () => {
+            const user_ = await window.pixiv.getUser(illust.userId);
+            const thumbnailImage_ = await window.pixiv.getThumbnailImage(
+                illust.id,
+            );
+            const userImage_ = await window.pixiv.getUserImage(
+                user_.id,
+                user_.extension,
+            );
+            if (mounted) {
+                setUser(user_);
+                setThumbnailImage(thumbnailImage_);
+                setUserImage(userImage_);
+            }
+        })();
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    return user === undefined ? (
+        <></>
+    ) : (
         <div className={classes.thumbPreview}>
             <Image
                 className={`${classes.thumb} ${classes.images}`}
-                src={`thumbnail/${illustId}.jpg`}
+                src={thumbnailImage}
                 onClick={onClick}
             />
             <div className={classes.title}>
-                <a href={`https://www.pixiv.net/en/artworks/${illustId}`}>
-                    {illustTitle}
+                <a href={`https://www.pixiv.net/en/artworks/${illust.id}`}>
+                    {illust.title}
                 </a>
             </div>
             <div>
                 <a
                     className={classes.user}
-                    href={`https://www.pixiv.net/en/users/${userId}`}
+                    href={`https://www.pixiv.net/en/users/${user.id}`}
                 >
                     <Image
                         className={`${classes.images} ${classes.userImage}`}
-                        src={`user-profile/${userImage}`}
+                        src={userImage}
                     />
-                    {username}
+                    {user.name}
                 </a>
             </div>
         </div>
