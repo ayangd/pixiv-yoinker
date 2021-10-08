@@ -13,7 +13,7 @@ let zip: JSZip;
 
 async function preprocess() {
     const dataZip = await JSZip.loadAsync(await ipcRenderer.invoke('getData'));
-    console.log(dataZip);
+    // console.log(dataZip);
     const illustFolder = dataZip.folder('data');
     if (illustFolder === null) {
         return;
@@ -44,9 +44,6 @@ async function preprocess() {
     }
 
     for (const illustFile of illustFolder.file(/.*/)) {
-        // const illust: Illustration = JSON.parse(
-        //     readFileSync(`data/${illustPath}`).toString('utf-8'),
-        // );
         const illust: Illustration = JSON.parse(
             await illustFile.async('string'),
         );

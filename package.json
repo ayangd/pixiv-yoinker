@@ -78,7 +78,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Devtography/electron-react-typescript-webpack-boilerplate"
+        "url": "git+https://github.com/ayangd/pixiv-yoinker"
     },
     "keywords": [
         "Electron",
@@ -88,6 +88,6 @@
         "Pixiv"
     ],
     "bugs": {
-        "url": "https://github.com/Devtography/electron-react-typescript-webpack-boilerplate/issues"
+        "url": "https://github.com/ayangd/pixiv-yoinker/issues"
     }
 }

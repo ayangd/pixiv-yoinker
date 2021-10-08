@@ -8,11 +8,17 @@ import * as JSZip from 'jszip';
 import attachYoinkingDebugger from '_/main/yoinking-debugger';
 
 let mainWindow: Electron.BrowserWindow | null;
-let zip = new JSZip();
+let { zip_: zip, setZip } = (() => {
+    var zip_ = new JSZip();
+    function setZip(zip: JSZip) {
+        zip_ = zip;
+    }
+    return { zip_, setZip };
+})();
 
 ipcMain.handle('getData', async (event, ...args) => {
     const result = await zip.generateAsync({ type: 'uint8array' });
-    zip = new JSZip();
+    setZip(new JSZip());
     return result;
 });
 
