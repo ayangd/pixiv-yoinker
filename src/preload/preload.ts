@@ -1,9 +1,9 @@
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 import * as JSZip from 'jszip';
 import {
     createWriteStream,
     existsSync,
-    readdirSync,
+    // readdirSync,
     readFileSync,
 } from 'original-fs';
 import { Illust, User } from '_/types/illust';
@@ -12,8 +12,26 @@ import { Illustration } from '_/types/illustration';
 let zip: JSZip;
 
 async function preprocess() {
-    const illustPaths = readdirSync('data/');
-    if (illustPaths.length === 0) {
+    const dataZip = await JSZip.loadAsync(await ipcRenderer.invoke('getData'));
+    console.log(dataZip);
+    const illustFolder = dataZip.folder('data');
+    if (illustFolder === null) {
+        return;
+    }
+    const imagesFolder = dataZip.folder('images');
+    if (imagesFolder === null) {
+        return;
+    }
+    const masterFolder = imagesFolder.folder('master');
+    if (masterFolder === null) {
+        return;
+    }
+    const thumbnailFolder = imagesFolder.folder('thumbnail');
+    if (thumbnailFolder === null) {
+        return;
+    }
+    const userProfileFolder = imagesFolder.folder('user-profile');
+    if (userProfileFolder === null) {
         return;
     }
 
@@ -25,9 +43,12 @@ async function preprocess() {
         zip = await JSZip.loadAsync(readFileSync('data.zip'));
     }
 
-    for (const illustPath of illustPaths) {
+    for (const illustFile of illustFolder.file(/.*/)) {
+        // const illust: Illustration = JSON.parse(
+        //     readFileSync(`data/${illustPath}`).toString('utf-8'),
+        // );
         const illust: Illustration = JSON.parse(
-            readFileSync(`data/${illustPath}`).toString('utf-8'),
+            await illustFile.async('string'),
         );
         const illustIllust = Object.values(illust.illust)[0];
         const illustUser = Object.values(illust.user)[0];
@@ -56,13 +77,29 @@ async function preprocess() {
             extension: profileExtension,
         };
 
+        const userProfileFile = userProfileFolder.file(originalProfile);
+        if (userProfileFile === null) {
+            console.log(`Not thumbnail file "${originalProfile}"`);
+            continue;
+        }
+        const thumbnailFile = thumbnailFolder.file(
+            `${transformedIllust.id}.jpg`,
+        );
+        if (thumbnailFile === null) {
+            console.log(`Not thumbnail file "${transformedIllust.id}.jpg"`);
+            continue;
+        }
+        const masterImages = masterFolder.file(
+            new RegExp(`${transformedIllust.id}_p.+`),
+        );
+
         zip.folder('user')?.file(
             `${transformedUser.id}.json`,
             JSON.stringify(transformedUser),
         );
         zip.folder('profile')?.file(
             profileName,
-            readFileSync(`images/user-profile/${originalProfile}`),
+            await userProfileFile.async('uint8array'),
         );
         zip.folder('illust')?.file(
             `${transformedIllust.id}.json`,
@@ -70,17 +107,15 @@ async function preprocess() {
         );
         zip.folder('thumbnail')?.file(
             `${transformedIllust.id}.jpg`,
-            readFileSync(`images/thumbnail/${transformedIllust.id}.jpg`),
-        );
-        const masterImages = readdirSync('images/master/').filter(
-            (master) => master.match(`${transformedIllust.id}_p.+`) !== null,
+            await thumbnailFile.async('uint8array'),
         );
         for (const masterImage of masterImages) {
             zip.folder('master')?.file(
-                masterImage.match(/\d+_p\d+/)![0] + '.jpg',
-                readFileSync(`images/master/${masterImage}`),
+                masterImage.name.match(/\d+_p\d+/)![0] + '.jpg',
+                await masterImage.async('uint8array'),
             );
         }
+        console.log(`Added illust ${illustIllust.id} to data.zip`);
     }
 
     zip.generateNodeStream({
@@ -91,19 +126,6 @@ async function preprocess() {
 }
 
 contextBridge.exposeInMainWorld('pixiv', {
-    // getAllIllustrations: async () => {
-    //     preprocess();
-    //     return readdirSync('data/');
-    // },
-    // getData: async (path: string) =>
-    //     readFileSync('data/' + path).toString('utf-8'),
-    // getImage: async (path: string) =>
-    //     'data:image/png;base64, ' +
-    //     readFileSync('images/' + path).toString('base64'),
-    // getMasterList: async (illustId: string) =>
-    //     readdirSync('images/master/').filter(
-    //         (master) => master.match(`${illustId}_p.+`) !== null,
-    //     ),
     getIllustrationList: async () => {
         await preprocess();
         return zip

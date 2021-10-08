@@ -8,6 +8,6 @@ import {} from '_types/global-types';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import App from './app';
+import App from '_/renderer/app';
 
 ReactDOM.render(<App />, document.getElementById('app'));

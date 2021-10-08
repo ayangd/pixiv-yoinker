@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
-import { Illust } from '_/types/illust';
-import Illustration from './components/illustration';
-import Navigation from './components/navigation';
-import Thumbs from './components/thumbs';
+import useIllusts from '_/renderer/hooks/useIllusts';
+import Illustration from '_/renderer/components/illustration';
+import Navigation from '_/renderer/components/navigation';
+import Thumbs from '_/renderer/components/thumbs';
 
 const useStyles = createUseStyles({
     app: {
@@ -15,29 +15,9 @@ const useStyles = createUseStyles({
 
 function App() {
     const classes = useStyles();
-    const [illusts, setIllusts] = React.useState<Record<string, Illust>>({});
+    const illusts = useIllusts();
     const [selected, setSelected] = React.useState('');
     const [url, setUrl] = React.useState('');
-
-    React.useEffect(() => {
-        let mounted = true;
-
-        (async () => {
-            const allIllusts = await window.pixiv.getIllustrationList();
-            const illusts_: Record<string, Illust> = {};
-            for (const illust of allIllusts) {
-                // illusts_.push(JSON.parse(await window.pixiv.getData(post)));
-                illusts_[illust] = await window.pixiv.getIllustration(illust);
-            }
-            if (mounted) {
-                setIllusts(illusts_);
-            }
-        })();
-
-        return () => {
-            mounted = false;
-        };
-    }, []);
 
     function onThumbnailClick(illustId: string) {
         setSelected(illustId);

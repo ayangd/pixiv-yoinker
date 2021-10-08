@@ -2,7 +2,8 @@ import * as React from 'react';
 import { createUseStyles } from 'react-jss';
 import { Illust } from '_/types/illust';
 import { Illustration } from '_/types/illustration';
-import { parseBreaks } from '../utils';
+import { htmlDecode } from '_/renderer/utils';
+import useMasterImages from '_/renderer/hooks/useMasterImages';
 
 const useStyles = createUseStyles({
     illustration: ({ hidden }: { hidden: boolean }) => ({
@@ -77,27 +78,7 @@ function Illustration({ illust, hidden, onBack }: IllustrationProps) {
         return <></>;
     }
     const classes = useStyles({ hidden: hidden ?? false });
-    const [masterImages, setMasterImages] = React.useState<string[]>([]);
-
-    React.useEffect(() => {
-        let mounted = true;
-
-        (async () => {
-            let masterImages_: string[] = [];
-            for (let i = 0; i < illust.pageCount; i++) {
-                masterImages_.push(
-                    await window.pixiv.getMasterImage(illust.id, i),
-                );
-            }
-            if (mounted) {
-                setMasterImages(masterImages_);
-            }
-        })();
-
-        return () => {
-            mounted = false;
-        };
-    }, []);
+    const masterImages = useMasterImages(illust);
 
     return (
         <div className={classes.illustration}>
@@ -114,7 +95,7 @@ function Illustration({ illust, hidden, onBack }: IllustrationProps) {
                 </div>
                 <div
                     dangerouslySetInnerHTML={{
-                        __html: parseBreaks(illust.description),
+                        __html: htmlDecode(illust.description),
                     }}
                 />
                 <div className={classes.tagContainer}>

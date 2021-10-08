@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
 import { Illust } from '_/types/illust';
-import ThumbPreview from './thumb-preview';
+import ThumbPreview from '_/renderer/components/thumb-preview';
 
 const useStyles = createUseStyles({
     thumbs: ({ hidden }: { hidden: boolean }) => ({
